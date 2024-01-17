@@ -1,4 +1,4 @@
-# Congestion Tax Fees service
+# Congestion Tax Fees Service
 This file provides a description to the HTTP Service that calculates congestion tax fees.
 
 To start HTTP server at http://127.0.0.1:8080 go to java root dir and run application with gradle.
