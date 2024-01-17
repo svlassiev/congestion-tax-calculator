@@ -1,6 +1,9 @@
 package congestion.calculator;
 
-public enum Vehicle {
+/**
+ * Vehicle contains different types of transport and contains information about toll taxation
+ */
+public enum TaxableVehicle {
     EMERGENCY(true),
     BUS(true),
     DIPLOMAT(true),
@@ -12,11 +15,11 @@ public enum Vehicle {
     UNKNOWN(false);
 
     private boolean tollFree;
-    Vehicle(boolean tollFree) {
+    TaxableVehicle(boolean tollFree) {
         this.tollFree = tollFree;
     }
 
-    public static Vehicle getVehicle(String vehicle) {
+    public static TaxableVehicle getVehicle(String vehicle) {
         switch (vehicle.toUpperCase()) {
             case "MOTORCYCLE":
                 return MOTORCYCLE;
