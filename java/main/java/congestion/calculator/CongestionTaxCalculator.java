@@ -13,6 +13,10 @@ public class CongestionTaxCalculator {
     private static final int MAX_WINDOW_IN_MINUTES = 60;
 
 
+    public static void main(String[] args) {
+        System.out.println("Congestion Tax Calculator");
+    }
+
     public int getTax(TaxableVehicle vehicle, LocalDateTime[] dateTimesUTC)
     {
         if (null == dateTimesUTC || dateTimesUTC.length == 0) {
@@ -23,7 +27,7 @@ public class CongestionTaxCalculator {
         List<ZonedDateTime> sortedZonedTime = Arrays.stream(dateTimesUTC)
                 .map(dateTimeUTC -> ZonedDateTime.of(dateTimeUTC, UTC).withZoneSameInstant(CET))
                 .sorted()
-                .toList();
+                .collect(Collectors.toUnmodifiableList());
 
         // Group toll passes by day
         // Assume all the passes have happened during the same year
