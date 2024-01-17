@@ -57,7 +57,7 @@ public class CongestionTaxCalculator {
         return totalFee;
     }
 
-    public int getTollFee(ZonedDateTime zonedDateTime, TaxableVehicle vehicle)
+    int getTollFee(ZonedDateTime zonedDateTime, TaxableVehicle vehicle)
     {
         if (vehicle.isTollFree() || isTollFreeDate(zonedDateTime)) return 0;
 

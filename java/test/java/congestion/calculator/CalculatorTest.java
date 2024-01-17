@@ -5,11 +5,13 @@ package congestion.calculator;
 
 import org.junit.Test;
 
-import java.time.Month;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public class CalculatorTest {
     @Test public void julyIsTollFree() {
@@ -72,5 +74,60 @@ public class CalculatorTest {
         assertEquals("Foreign shouldn't pay", 0, calculator.getTollFee(dateTime, TaxableVehicle.FOREIGN));
     }
 
-    // TBD test getTax method
+    @Test public void getTaxForThreeWindows() {
+        CongestionTaxCalculator calculator = new CongestionTaxCalculator();
+        // Wednesday, August 14, 2013 1:46:01 PM, Wednesday, August 14, 2013 9:42:01 AM, Wednesday, August 14, 2013 4:04:13 PM
+        // [1376487961000, 1376473321000, 1376496253000]
+        LocalDateTime[] tollPasses = convertTime(Arrays.asList(1376487961000L, 1376473321000L, 1376496253000L));
+        int tax = calculator.getTax(TaxableVehicle.CAR, tollPasses);
+        assertEquals("Tax should be 34SEK = 8SEK + 8SEK + 18SEK", 34, tax);
+    }
+    @Test public void getTaxForCoworkersExample() {
+        /**
+         * Coworkers example:
+         * "2013-01-14 21:00:00" Monday Free - 1358197200000
+         * "2013-01-15 21:00:00" Tuesday Free - 1358283600000
+         * "2013-02-07 06:23:27" Thursday 8SEK - 1360218207000
+         * "2013-02-07 15:27:00" Thursday 13SEK - 1360250820000
+         * "2013-02-08 06:27:00" Friday 8SEK - 1360304820000
+         * "2013-02-08 06:20:27" Friday same window - 1360304427000
+         * "2013-02-08 14:35:00" Friday same window as the next toll - 1360334100000
+         * "2013-02-08 15:29:00" Friday 13SEK (21 for this day) - 1360337340000
+         * "2013-02-08 15:47:00" Friday 18SEK (39 for this day) - 1360338420000
+         * "2013-02-08 16:01:00" Friday same window - 1360339260000
+         * "2013-02-08 16:48:00" Friday 18SEK (57 for this day) - 1360342080000
+         * "2013-02-08 17:49:00" Friday 13SEK (capped to 60 SEK) - 1360345740000
+         * "2013-02-08 18:29:00" Friday same window - 1360348140000
+         * "2013-02-08 18:35:00" Friday same window - 1360348500000
+         * "2013-03-26 14:25:00" Tuesday 8SEK - 1364307900000
+         * "2013-03-28 14:07:27" Day before public holiday - 1364479647000
+         *
+         * In total 8 + 13 + 60 + 8 = 89SEK
+         */
+        CongestionTaxCalculator calculator = new CongestionTaxCalculator();
+        LocalDateTime[] tollPasses = convertTime(Arrays.asList(
+                1358193600000L,
+                1358280000000L,
+                1360214607000L,
+                1360247220000L,
+                1360301220000L,
+                1360300827000L,
+                1360330500000L,
+                1360333740000L,
+                1360334820000L,
+                1360335660000L,
+                1360338480000L,
+                1360342140000L,
+                1360344540000L,
+                1360344900000L,
+                1364304300000L,
+                1364476047000L
+        ));
+        int tax = calculator.getTax(TaxableVehicle.CAR, tollPasses);
+        assertEquals("Tax should be 89SEK", 89, tax);
+    }
+
+    private LocalDateTime[] convertTime(List<Long> unixTimes) {
+        return unixTimes.stream().map(unixTime -> Instant.ofEpochMilli(unixTime).atZone(ZoneOffset.UTC).toLocalDateTime()).collect(Collectors.toList()).toArray(new LocalDateTime[0]);
+    }
 }

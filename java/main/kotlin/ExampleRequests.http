@@ -1,0 +1,18 @@
+# This file contains example requests to the server
+
+###
+GET http://127.0.0.1:8080/
+Accept: application/json
+
+###
+GET http://127.0.0.1:8080/task/3d2de245-ab77-4892-bc28-8c608bd03f16
+Accept: application/json
+
+###
+# Example of POST request for Wednesday, August 14, 2013 1:46:01 PM, Wednesday, August 14, 2013 9:42:01 AM, Wednesday, August 14, 2013 4:04:13 PM
+POST http://127.0.0.1:8080/task
+Content-Type: application/json
+
+{"vehicleType":"car","tollPasses":["1376487961000","1376473321000","1376496253000"]}
+
+

@@ -21,6 +21,9 @@ dependencies {
     implementation("io.ktor:ktor-server-netty-jvm:2.3.7")
     implementation("io.ktor:ktor-client-core:2.3.7")
     implementation("io.ktor:ktor-client-cio:2.3.7")
+    implementation("io.ktor:ktor-server-content-negotiation:2.3.7")
+    implementation("io.ktor:ktor-serialization-gson:2.3.7")
+
     implementation("ch.qos.logback:logback-classic:1.4.12")
 
 
